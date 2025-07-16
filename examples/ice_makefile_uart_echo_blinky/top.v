@@ -15,8 +15,8 @@ module top (
     counter <= counter + 1;
   end
 
-  assign LED_R = 1'b1;
-  assign LED_G = counter[N];
+  assign LED_R = counter[N]; 
+  assign LED_G = 1'b1;
   assign LED_B = 1'b1;
 
 endmodule
