@@ -16,7 +16,7 @@ prog: gateware.bin
 
 gateware.bin: $(RTL)
 	$(YOSYS) -q -p "read_verilog -sv $(RTL); synth_ice40 -top top -json $*.json"
-	$(NEXTPNR) -q --randomize-seed --up5k --package sg48 --pcf ice40.pcf --json $*.json --asc $*.asc
+	$(NEXTPNR) -l nextpnr.log -q --randomize-seed --up5k --package sg48 --pcf ice40.pcf --json $*.json --asc $*.asc
 	$(ICEPACK) $*.asc $@
 
 .bin.uf2:
