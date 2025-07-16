@@ -15,7 +15,7 @@ prog: gateware.bin
 	$(DFU_UTIL) -d 1209:b1c0 -a 1 -D gateware.bin -R
 
 gateware.bin: $(RTL)
-	$(YOSYS) -q -p "read_verilog -sv $(RTL); synth_ice40 -top top -json $*.json"
+	$(YOSYS) -l yosys.log -q -p "read_verilog -sv $(RTL); synth_ice40 -top top -json $*.json"
 	$(NEXTPNR) -l nextpnr.log -q --randomize-seed --up5k --package sg48 --pcf ice40.pcf --json $*.json --asc $*.asc
 	$(ICEPACK) $*.asc $@
 
