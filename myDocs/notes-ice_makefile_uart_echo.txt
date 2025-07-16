@@ -1,0 +1,46 @@
+07/15/25
+    starting with  ice_apio_uart_echo
+    cp pico_ice.pcf  ice40.pcf
+    added Makefile
+    YOSYS = $(OSS_CAD_SUITE)/bin/yosys
+    NEXTPNR = $(OSS_CAD_SUITE)/bin/nextpnr-ice40
+    ICEPACK = $(OSS_CAD_SUITE)/bin/icepack
+    DFU_UTIL = $(OSS_CAD_SUITE)/bin/dfu-util
+    BIN2UF2 = bin2uf2
+    
+    RTL = top.v
+    
+    all: gateware.bin
+    
+    clean:
+            $(RM) *.json *.asc *.bin *.uf2
+    
+    prog: gateware.bin
+            $(DFU_UTIL) -d 1209:b1c0 -a 1 -D gateware.bin -R
+    
+    gateware.bin: $(RTL)
+            $(YOSYS) -q -p "read_verilog -sv $(RTL); synth_ice40 -top top -json $*.json"
+            $(NEXTPNR) -q --randomize-seed --up5k --package sg48 --pcf ice40.pcf --json $*.json --asc $*.asc
+            $(ICEPACK) $*.asc $@
+    
+    .bin.uf2:
+            $(BIN2UF2) -o $@ $<
+               .SUFFIXES: .v .sv .asc .bin .uf2
+    
+    make
+    /home/devel/oss-cad-suite//bin/yosys -q -p "read_verilog -sv top.v; synth_ice40 -top top -json gateware.json"
+    /home/devel/oss-cad-suite//bin/nextpnr-ice40 -q --randomize-seed --up5k --package sg48 --pcf ice40.pcf --json gateware.json --asc gateware.asc
+    /home/devel/oss-cad-suite//bin/icepack gateware.asc gateware.bin
+    
+    bin2uf2 -o gateware.uf2 gateware.bin
+    
+    devel@pi5-80:~ $ minicom ACM1
+    
+    Welcome to minicom 2.8
+    
+    OPTIONS: I18n
+    Port /dev/ttyACM1, 19:28:58
+    
+    Press CTRL-A Z for help on special keys
+    
+    ÿ¯ 0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJK
