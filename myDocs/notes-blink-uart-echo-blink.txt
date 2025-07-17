@@ -1,0 +1,40 @@
+pico-ice default firmware
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_blinky $ ls /dev/ttyACM*
+/dev/ttyACM0  /dev/ttyACM1  /dev/ttyACM2
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_blinky $ df
+Filesystem     1K-blocks      Used Available Use% Mounted on
+udev             4081888         0   4081888   0% /dev
+tmpfs             825264      8592    816672   2% /run
+/dev/mmcblk0p2 238576544 107002164 119437712  48% /
+tmpfs            4126304       368   4125936   1% /dev/shm
+tmpfs               5120        48      5072   1% /run/lock
+/dev/mmcblk0p1    522230     79108    443122  16% /boot/firmware
+tmpfs             825248       176    825072   1% /run/user/1000
+/dev/sda           32640      8397     24244  26% /media/devel/pico-ice
+devel@pi5-80:~ $ git clone https://github.com/develone/pico-ice-sdk.git -b test-dev
+Cloning into 'pico-ice-sdk'...
+remote: Enumerating objects: 3534, done.
+remote: Counting objects: 100% (556/556), done.
+remote: Compressing objects: 100% (236/236), done.
+remote: Total 3534 (delta 412), reused 387 (delta 317), pack-reused 2978 (from 2)
+Receiving objects: 100% (3534/3534), 5.70 MiB | 15.04 MiB/s, done.
+Resolving deltas: 100% (2183/2183), done.
+devel@pi5-80:~ $ cd pico-ice-sdk/
+ devel@pi5-80:~/pico-ice-sdk $ cd examples/ice_makefile_blinky/
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_blinky $ make 
+/home/devel/oss-cad-suite//bin/yosys -q -p "read_verilog -sv top.sv; synth_ice40 -top top -json gateware.json"
+/home/devel/oss-cad-suite//bin/nextpnr-ice40 -l nextpnr.log -q --randomize-seed --up5k --package sg48 --pcf ice40.pcf --json gateware.json --asc gateware.asc
+/home/devel/oss-cad-suite//bin/icepack gateware.asc gateware.bin
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_blinky $ bin2uf2 -o gateware.uf2 gateware.bin 
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_blinky $ cp gateware.uf2 /media/devel/pico-ice/
+starts blinking green
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_blinky $ cd ../ice_makefile_uart_echo_blinky/
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_uart_echo_blinky $ make 
+/home/devel/oss-cad-suite//bin/yosys -l yosys.log -q -p "read_verilog -sv top.v; synth_ice40 -top top -json gateware.json"
+/home/devel/oss-cad-suite//bin/nextpnr-ice40 -l nextpnr.log -q --randomize-seed --up5k --package sg48 --pcf ice40.pcf --json gateware.json --asc gateware.asc
+/home/devel/oss-cad-suite//bin/icepack gateware.asc gateware.bin
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_uart_echo_blinky $ bin2uf2 -o gateware.uf2 gateware.bin 
+devel@pi5-80:~/pico-ice-sdk/examples/ice_makefile_uart_echo_blinky $ cp gateware.uf2 /media/devel/pico-ice/
+starts blinking red
+
+
