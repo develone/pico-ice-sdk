@@ -2,9 +2,9 @@
 # https://digilent.com/reference/pmod/start
 
 # Signals used by the default firmware
-set_io -nowarn CLK              35
-set_io -nowarn UART_TX          25
-set_io -nowarn UART_RX          27
+set_io -nowarn clk              35
+set_io -nowarn uart_txd          25
+set_io -nowarn uart_rxd          27
 
 # Signals definition (as in the circuit diagram)
 set_io -nowarn ICE_2            2
@@ -38,7 +38,8 @@ set_io -nowarn ICE_47           47
 set_io -nowarn ICE_48           48
 set_io -nowarn ICE_FLASH_IO2    12
 set_io -nowarn ICE_FLASH_IO3    13
-set_io -nowarn ICE_PB           10
+#set_io -nowarn ICE_PB           10
+set_io -nowarn resetq           10
 set_io -nowarn ICE_SO           14
 set_io -nowarn ICE_SI           17
 set_io -nowarn ICE_SCK          15
